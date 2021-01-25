@@ -17,30 +17,34 @@ boid_y_velocities=[random.uniform(-20.0,20.0) for x in range(n_boids)]
 boids=(boids_x,boids_y,boid_x_velocities,boid_y_velocities)
 
 def update_boids(boids):
-	xs,ys,xvs,yvs=boids
+	x_positions,y_positions,x_velocities,y_velocities=boids
 	# Fly towards the middle
-	for i in range(len(xs)):
-		for j in range(len(xs)):
-			xvs[i]=xvs[i]+(xs[j]-xs[i])*0.01/len(xs)
-	for i in range(len(xs)):
-		for j in range(len(xs)):
-			yvs[i]=yvs[i]+(ys[j]-ys[i])*0.01/len(xs)
+	for i in range(n_boids):
+		for j in range(n_boids):
+			x_velocities[i]=x_velocities[i]+(x_positions[j]-x_positions[i])*0.01/n_boids
+
+	for i in range(len(x_positions)):
+		for j in range(len(x_positions)):
+			y_velocities[i]=y_velocities[i]+(y_positions[j]-y_positions[i])*0.01/n_boids
+
 	# Fly away from nearby boids
-	for i in range(len(xs)):
-		for j in range(len(xs)):
-			if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 100:
-				xvs[i]=xvs[i]+(xs[i]-xs[j])
-				yvs[i]=yvs[i]+(ys[i]-ys[j])
+	for i in range(n_boids):
+		for j in range(n_boids):
+			if (x_positions[j]-x_positions[i])**2 + (y_positions[j]-y_positions[i])**2 < 100:
+				x_velocities[i]=x_velocities[i]+(x_positions[i]-x_positions[j])
+				y_velocities[i]=y_velocities[i]+(y_positions[i]-y_positions[j])
+
 	# Try to match speed with nearby boids
-	for i in range(len(xs)):
-		for j in range(len(xs)):
-			if (xs[j]-xs[i])**2 + (ys[j]-ys[i])**2 < 10000:
-				xvs[i]=xvs[i]+(xvs[j]-xvs[i])*0.125/len(xs)
-				yvs[i]=yvs[i]+(yvs[j]-yvs[i])*0.125/len(xs)
+	for i in range(n_boids):
+		for j in range(n_boids):
+			if (x_positions[j]-x_positions[i])**2 + (y_positions[j]-y_positions[i])**2 < 10000:
+				x_velocities[i]=x_velocities[i]+(x_velocities[j]-x_velocities[i])*0.125/n_boids
+				y_velocities[i]=y_velocities[i]+(y_velocities[j]-y_velocities[i])*0.125/n_boids
+
 	# Move according to velocities
-	for i in range(len(xs)):
-		xs[i]=xs[i]+xvs[i]
-		ys[i]=ys[i]+yvs[i]
+	for i in range(len(x_positions)):
+		x_positions[i]=x_positions[i]+x_velocities[i]
+		y_positions[i]=y_positions[i]+y_velocities[i]
 
 
 figure=plt.figure()
